@@ -14,16 +14,17 @@
 ###############################################################################
 
 import configparser
+import logging
 import os
 import sys
-from subprocess import run
 from datetime import datetime
+from subprocess import run
 
 import requests
 
 
 def detect_ipv6():
-
+    ipv6 = ""
     command_string = ["ip", "-6", "ad", "sh", f"{interface}"]
     ipv6_addresses = run(command_string, capture_output=True)
     if ipv6_addresses.returncode > 0:
@@ -44,7 +45,7 @@ def send_new_ipv6(ipv6_new):
 
     result = requests.get(dyndns_string)
     if str(result) == "<Response [200]>":
-        print(f"Die neue IPv6-Adresse {ipv6_new} wurde übermittelt.")
+        logging.info(f"Die neue IPv6-Adresse {ipv6_new} wurde übermittelt.")
     else:
         print(f"FEHLER: die neue IPv6-Adresse {ipv6_new} konnte nicht übermittelt werden.")
     return
@@ -59,9 +60,23 @@ def write_config(script_path, script_name):
 
 if __name__ == "__main__":
 
+    ipv6_saved = ""
+
     script_path = os.path.split(os.path.abspath(__file__))[0]
     script_name = os.path.basename(__file__).split(".")[0]
 
+    # Logging-Einstellungen
+    logging.basicConfig(level=logging.DEBUG,
+                        format="%(asctime)s %(levelname)s: %(message)s",
+                        datefmt="%Y-%m-%d %H:%M:%S",
+                        encoding="utf-8",
+                        handlers=[logging.FileHandler(os.path.join(script_path,
+                                                      script_name +
+                                                      ".log")),
+                                  logging.StreamHandler()]
+                        )
+
+    logging.info("-----")
     try:
         # Einstellungen für die Config-Datei
         config_file = os.path.join(script_path, script_name + ".cfg")
@@ -91,7 +106,7 @@ if __name__ == "__main__":
 
     # IP-Adresse überprüfen
     ipv6_actual = detect_ipv6()
-    print(f"Die aktuelle IPv6-Adresse lautet: {ipv6_actual}")
+    logging.info(f"Die aktuelle IPv6-Adresse lautet: {ipv6_actual}")
 
     if ipv6_saved != ipv6_actual:
         send_new_ipv6(ipv6_actual)
