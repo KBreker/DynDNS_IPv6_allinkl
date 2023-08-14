@@ -61,7 +61,6 @@ def write_config(script_path, script_name):
 if __name__ == "__main__":
 
     ipv6_saved = ""
-
     script_path = os.path.split(os.path.abspath(__file__))[0]
     script_name = os.path.basename(__file__).split(".")[0]
 
@@ -75,8 +74,8 @@ if __name__ == "__main__":
                                                       ".log")),
                                   logging.StreamHandler()]
                         )
-
     logging.info("-----")
+
     try:
         # Einstellungen für die Config-Datei
         config_file = os.path.join(script_path, script_name + ".cfg")
