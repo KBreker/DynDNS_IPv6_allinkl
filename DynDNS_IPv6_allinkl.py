@@ -9,7 +9,7 @@
 #  herigen. Wenn sich diese geändert hat, wird der DynDNS-Service vom An-     #
 #  bieter allinkl.com über die neue IPv6-Adresse informiert.                  #
 #                                                                             #
-#  Kai Breker, Version 1.1.0 (14.08.2023)                                     #
+#  Kai Breker, Version 1.1.1 (14.08.2023)                                     #
 #                                                                             #
 ###############################################################################
 
@@ -45,7 +45,7 @@ def send_new_ipv6(ipv6_new):
 
     result = requests.get(dyndns_string)
     if str(result) == "<Response [200]>":
-        logging.info(f"Die neue IPv6-Adresse {ipv6_new} wurde übermittelt.")
+        logging.info(f"Die IPv6-Adresse hat sich geändert; die neue Adresse {ipv6_new} wurde übermittelt.")
     else:
         print(f"FEHLER: die neue IPv6-Adresse {ipv6_new} konnte nicht übermittelt werden.")
     return
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     script_name = os.path.basename(__file__).split(".")[0]
 
     # Logging-Einstellungen
-    logging.basicConfig(level=logging.DEBUG,
+    logging.basicConfig(level=logging.INFO,
                         format="%(asctime)s %(levelname)s: %(message)s",
                         datefmt="%Y-%m-%d %H:%M:%S",
                         encoding="utf-8",
@@ -74,7 +74,6 @@ if __name__ == "__main__":
                                                       ".log")),
                                   logging.StreamHandler()]
                         )
-    logging.info("-----")
 
     try:
         # Einstellungen für die Config-Datei
@@ -96,6 +95,7 @@ if __name__ == "__main__":
         print(f"Die Konfigurationsdatei '{script_name}.cfg' konnte nicht "
               "gefunden werden. Bitte überprüfe, ob Sie den gleichen Dateinamen "
               "wie dieses Skript hat und im gleichen Verzeichnis liegt.")
+        sys.exit()
 
     except configparser.NoSectionError:
         print(f"Die Konfigurationsdatei '{script_name}.cfg' konnte nicht "
@@ -105,7 +105,7 @@ if __name__ == "__main__":
 
     # IP-Adresse überprüfen
     ipv6_actual = detect_ipv6()
-    logging.info(f"Die aktuelle IPv6-Adresse lautet: {ipv6_actual}")
+    logging.debug(f"Die aktuelle IPv6-Adresse lautet: {ipv6_actual}")
 
     if ipv6_saved != ipv6_actual:
         send_new_ipv6(ipv6_actual)
