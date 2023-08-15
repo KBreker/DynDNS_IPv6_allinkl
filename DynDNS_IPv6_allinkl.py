@@ -9,7 +9,7 @@
 #  herigen. Wenn sich diese geändert hat, wird der DynDNS-Service vom An-     #
 #  bieter allinkl.com über die neue IPv6-Adresse informiert.                  #
 #                                                                             #
-#  Kai Breker, Version 1.1.1 (14.08.2023)                                     #
+#  Kai Breker, Version 1.1.2 (15.08.2023)                                     #
 #                                                                             #
 ###############################################################################
 
@@ -34,7 +34,7 @@ def detect_ipv6():
     ipv6_addresses = str(ipv6_addresses).split(sep="\\n")
 
     for line in ipv6_addresses:
-        if "global dynamic" in line:
+        if "inet6 2" in line and "global dynamic" in line:
             ipv6 = line.strip().split(" ")[1][:-3]
 
     return ipv6
