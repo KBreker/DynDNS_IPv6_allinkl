@@ -1,6 +1,6 @@
 Dieses Programm ermittelt die aktuelle IPv6-Adresse und vergleicht diese mit der vorherigen. Wenn sich diese geändert hat, wird der DynDNS / DDNS-Service vom Anbieter [all-inkl.com](https://all-inkl.com/) über die neue IPv6-Adresse informiert, damit auch eine Erreichbarkeit mittels IPv4 sichergestellt ist.
 
-Es wird das Modul 'requests' und 'configparser' benötigt, die mittels 
+Es werden die Module 'requests' und 'configparser' benötigt, die mittels 
 `python -m pip install requests`
 und
 `python -m pip install configparser`
